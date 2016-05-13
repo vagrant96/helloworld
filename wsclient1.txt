@@ -1,0 +1,44 @@
+import websocket
+direct = ""
+
+if __name__ == "__main__":
+	websocket.enableTrace(True)
+	ws = websocket.create_connection("ws://192.168.0.3:8080/websocket")
+	while True:
+		direct = raw_input('enter a word:')
+		if direct == "end":
+			print("ending connection")
+			ws.close()
+			break
+		if direct == "forward":
+			print("forward")
+			ws.send("forward")
+			print ("Sent")
+			print ("Recieving...")
+			result = ws.recv()
+			print ("Received {}".format(result))			
+		if direct == "forward off":
+			print("forward off requested")
+			ws.send("forward off")
+			print ("Sent")
+			print ("Receiving...")
+			result = ws.recv()
+			print ("Received {}".format(result))
+		if direct == "backward":
+			print("backward requested")
+			ws.send("backward")
+			print("Sent")
+			print("Receiving...")
+			result = ws.recv()
+			print("Received {}".format(result))
+		if direct == "backward off":
+			print("backward off requested")
+			ws.send("backward off")
+			print ("Sent")
+			print ("Receiving....")
+			result = ws.recv()
+			print("Received {}".format(result))
+			
+			
+	
+

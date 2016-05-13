@@ -1,0 +1,57 @@
+
+import tornado.httpserver
+import tornado.ioloop
+import tornado.options
+import tornado.web
+import tornado.websocket
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(25,GPIO.OUT)
+GPIO.setup(24,GPIO.OUT)
+p=GPIO.PWM(25,50)
+q=GPIO.PWM(24,50)
+
+
+
+
+class WebSocketHandler(tornado.websocket.WebSocketHandler):
+	def open(self):
+	    pass
+	
+	def on_message(self,message):
+        			self.write_message(u"Your message Jimmy was: " + message)
+
+       	    			
+	
+				if message ==("forward"):p.start(100)
+   				self.write_message("Starting forward")
+						
+		          	if message ==("forward off"):p.stop()
+				self.write_message("Stopping forwards")
+				
+				if message ==("backward"):q.start(100)
+				self.write_message("going backwards")
+
+				if message ==("backward off"):q.stop()
+				self.write_message("Stopping backwards")
+		   			
+				
+		
+	
+	def on_close(self):
+	    pass
+
+class Application(tornado.web.Application):
+
+	def __init__(self):
+
+	   handlers = [(r'/websocket',WebSocketHandler)]
+
+	   tornado.web.Application.__init__(self,handlers)
+if __name__ == '__main__':
+	ws_ap = Application()
+	server = tornado.httpserver.HTTPServer(ws_ap)
+	server.listen(8080)
+	tornado.ioloop.IOLoop.instance().start()
+
